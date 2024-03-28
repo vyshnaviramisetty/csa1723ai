@@ -1,0 +1,59 @@
+def is_valid_assignment(variable, value, assignment, neighbors):
+    for neighbor in neighbors[variable]:
+        if neighbor in assignment and assignment[neighbor] == value:
+            return False
+    return True
+
+def backtrack_search(assignment, variables, domain, neighbors):
+    if len(assignment) == len(variables):
+        return assignment
+    unassigned = [var for var in variables if var not in assignment]
+    var = unassigned[0]
+    for value in domain[var]:
+        if is_valid_assignment(var, value, assignment, neighbors):
+            assignment[var] = value
+            result = backtrack_search(assignment, variables, domain, neighbors)
+            if result:
+                return result
+            del assignment[var]
+    return None
+
+# Example usage:
+variables = ['WA', 'NT', 'SA', 'Q', 'NSW', 'V', 'T']
+domain = {
+    'WA': ['red', 'green', 'blue'],
+    'NT': ['red', 'green', 'blue'],
+    'SA': ['red', 'green', 'blue'],
+    'Q': ['red', 'green', 'blue'],
+    'NSW': ['red', 'green', 'blue'],
+    'V': ['red', 'green', 'blue'],
+    'T': ['red', 'green', 'blue']
+}
+neighbors = {
+    'WA': ['NT', 'SA'],
+    'NT': ['WA', 'SA', 'Q'],
+    'SA': ['WA', 'NT', 'Q', 'NSW', 'V'],
+    'Q': ['NT', 'SA', 'NSW'],
+    'NSW': ['Q', 'SA', 'V'],
+    'V': ['SA', 'NSW', 'T'],
+    'T': ['V']
+}
+
+assignment = backtrack_search({}, variables, domain, neighbors)
+if assignment:
+    print("Solution found:")
+    for var, value in assignment.items():
+        print(f"{var}: {value}")
+else:
+    print("No solution found.")
+#output
+py
+Solution found:
+WA: red
+NT: green
+SA: blue
+Q: red
+NSW: green
+V: red
+T: green
+
